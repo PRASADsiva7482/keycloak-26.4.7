@@ -1,0 +1,41 @@
+/* V-App Account Console Custom Overrides */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* Loading container branding */
+.keycloak__loading-container {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+}
+
+#loading-text {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+    background: linear-gradient(135deg, #a78bfa, #67e8f9);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 700;
+}
+
+/* Custom spinner color */
+.pf-v5-c-spinner__path {
+    stroke: #7c3aed !important;
+}
+
+/* Masthead styling */
+.pf-v5-c-masthead {
+    --pf-v5-c-masthead--BackgroundColor: #0f0c29 !important;
+    border-bottom: 1px solid rgba(124, 58, 237, 0.2) !important;
+}
+
+/* Nav sidebar accent */
+.pf-v5-c-nav__link.pf-m-current {
+    border-left-color: #7c3aed !important;
+}
+
+/* Primary buttons */
+.pf-v5-c-button.pf-m-primary {
+    --pf-v5-c-button--m-primary--BackgroundColor: #7c3aed !important;
+}
+
+.pf-v5-c-button.pf-m-primary:hover {
+    --pf-v5-c-button--m-primary--hover--BackgroundColor: #6d28d9 !important;
+}
