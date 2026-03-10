@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="color-scheme" content="light${(properties.darkMode)?boolean?then(' dark', '')}">
     <title>Welcome to V-App</title>
-    <link rel="shortcut icon" href="${resourcesCommonPath}/img/favicon.ico">
+    <link rel="shortcut icon" href="${baseUrl}${resourcesPath}/img/favicon.svg">
     <#if properties.darkMode?boolean>
       <script type="module" async blocking="render">
           const DARK_MODE_CLASS = "${properties.kcDarkModeClass}";
@@ -43,7 +43,7 @@
         <header class="pf-v5-c-login__header">
           <div class="pf-v5-c-brand v-app-welcome-brand">
             <div class="v-app-welcome-logo">
-              <span class="v-app-welcome-v">V</span>
+              <img src="${baseUrl}${resourcesPath}/logo.svg" alt="V-App Logo" class="v-app-welcome-v-img">
               <span class="v-app-welcome-text">V-App</span>
             </div>
           </div>

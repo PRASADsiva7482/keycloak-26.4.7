@@ -90,9 +90,17 @@ html.login-pf {
 }
 
 @keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
 /* Animated background orbs */
@@ -126,15 +134,35 @@ html.login-pf {
 }
 
 @keyframes orbFloat1 {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    33% { transform: translate(-80px, 60px) scale(1.1); }
-    66% { transform: translate(40px, -40px) scale(0.9); }
+
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    33% {
+        transform: translate(-80px, 60px) scale(1.1);
+    }
+
+    66% {
+        transform: translate(40px, -40px) scale(0.9);
+    }
 }
 
 @keyframes orbFloat2 {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    33% { transform: translate(60px, -80px) scale(1.15); }
-    66% { transform: translate(-40px, 40px) scale(0.95); }
+
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    33% {
+        transform: translate(60px, -80px) scale(1.15);
+    }
+
+    66% {
+        transform: translate(-40px, 40px) scale(0.95);
+    }
 }
 
 /* ============================================
@@ -199,6 +227,22 @@ html.login-pf {
     transform: scale(1.05);
 }
 
+.v-app-logo-bg {
+    width: 60px;
+    height: 60px;
+    background-image: url('../img/v-app-logo.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    filter: drop-shadow(0 4px 12px rgba(124, 58, 237, 0.4));
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.v-app-logo-bg:hover {
+    filter: drop-shadow(0 6px 20px rgba(124, 58, 237, 0.6));
+    transform: scale(1.05) rotate(-5deg);
+}
+
 .v-app-brand-text {
     font-size: 2rem;
     font-weight: 800;
@@ -243,6 +287,7 @@ html.login-pf {
         opacity: 0;
         transform: translateY(24px) scale(0.97);
     }
+
     to {
         opacity: 1;
         transform: translateY(0) scale(1);
@@ -264,8 +309,13 @@ html.login-pf {
 }
 
 @keyframes shimmer {
-    0% { background-position: -200% 0; }
-    100% { background-position: 200% 0; }
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
+    }
 }
 
 /* Registration form */
@@ -431,7 +481,7 @@ input[type="submit"]::after,
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
     transform: translateX(-100%);
     transition: transform 0.5s ease;
 }
@@ -545,8 +595,15 @@ input[type="checkbox"] {
 }
 
 @keyframes alertSlide {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .pf-c-alert.pf-m-danger,
@@ -883,17 +940,32 @@ img[alt="Keycloak"] {
     animation: formElementFadeIn 0.5s ease-out backwards;
 }
 
-.form-group:nth-child(1) { animation-delay: 0.1s; }
-.form-group:nth-child(2) { animation-delay: 0.2s; }
-.form-group:nth-child(3) { animation-delay: 0.3s; }
-.form-group:nth-child(4) { animation-delay: 0.4s; }
-.form-group:nth-child(5) { animation-delay: 0.5s; }
+.form-group:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.form-group:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.form-group:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.form-group:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+.form-group:nth-child(5) {
+    animation-delay: 0.5s;
+}
 
 @keyframes formElementFadeIn {
     from {
         opacity: 0;
         transform: translateY(12px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
