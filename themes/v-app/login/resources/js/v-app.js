@@ -1,12 +1,50 @@
 /**
- * V-App Login Theme JavaScript
- * Handles password visibility toggle, input enhancements, and branding.
+ * Voltforge Keycloak Theme - v-app.js
+ * Professional enterprise authentication enhancements:
+ * - Dynamic high-res Voltforge SVG & ICO Favicon injection across all web flows
+ * - Clean SVG password visibility toggles
+ * - Safe enterprise text rebranding (Voltforge)
+ * - Accessible focus handling and smooth interactions
+ * - Polished "Already have an account? Log in" switcher
  */
+
+// =========================================================================
+// 1. Instant Voltforge Favicon Injection (Runs Immediately in Head)
+// =========================================================================
+(function applyVoltforgeFavicon() {
+    const svgData = `<svg viewBox="0 0 48 48" width="64" height="64" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="topNarayanaGrad" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#FFD700"/><stop offset="30%" stop-color="#FF9933"/><stop offset="70%" stop-color="#1DA1F2"/><stop offset="100%" stop-color="#0A4D8C"/></linearGradient><linearGradient id="topShivaGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.9"/><stop offset="50%" stop-color="#E0E0E0" stop-opacity="0.8"/><stop offset="100%" stop-color="#CCCCCC" stop-opacity="0.7"/></linearGradient><filter id="topGlow"><feGaussianBlur stdDeviation="0.8" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><g filter="url(#topGlow)"><path d="M10 8 L24 40 L38 8" stroke="url(#topNarayanaGrad)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M13 11 L24 36 L35 11" stroke="rgba(255,255,255,0.4)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/></g><g opacity="0.85"><line x1="14" y1="14" x2="34" y2="14" stroke="url(#topShivaGrad)" stroke-width="2.2" stroke-linecap="round"/><line x1="16" y1="20" x2="32" y2="20" stroke="url(#topShivaGrad)" stroke-width="2.2" stroke-linecap="round"/><line x1="18" y1="26" x2="30" y2="26" stroke="url(#topShivaGrad)" stroke-width="2.2" stroke-linecap="round"/></g><circle cx="24" cy="5" r="2.5" fill="#FFD700" opacity="0.9" filter="url(#topGlow)"/><circle cx="20" cy="30" r="0.8" fill="rgba(255,255,255,0.5)"/><circle cx="28" cy="30" r="0.8" fill="rgba(255,255,255,0.5)"/></svg>`;
+
+    const faviconUrl = 'data:image/svg+xml,' + encodeURIComponent(svgData);
+
+    function updateIcons() {
+        const existingIcons = document.querySelectorAll("link[rel*='icon']");
+        existingIcons.forEach(el => el.remove());
+
+        const svgLink = document.createElement('link');
+        svgLink.rel = 'icon';
+        svgLink.type = 'image/svg+xml';
+        svgLink.href = faviconUrl;
+        document.head.appendChild(svgLink);
+
+        const shortcutLink = document.createElement('link');
+        shortcutLink.rel = 'shortcut icon';
+        shortcutLink.type = 'image/svg+xml';
+        shortcutLink.href = faviconUrl;
+        document.head.appendChild(shortcutLink);
+    }
+
+    if (document.head) {
+        updateIcons();
+    } else {
+        document.addEventListener("DOMContentLoaded", updateIcons);
+    }
+})();
+
 document.addEventListener("DOMContentLoaded", function () {
 
-    // ============================================
-    // 1. Replace any remaining "Keycloak" text in visible elements
-    // ============================================
+    // =========================================================================
+    // 2. Voltforge Enterprise Rebranding
+    // =========================================================================
     function rebrand() {
         const walker = document.createTreeWalker(
             document.body,
@@ -17,202 +55,131 @@ document.addEventListener("DOMContentLoaded", function () {
 
         while (walker.nextNode()) {
             const node = walker.currentNode;
-            if (node.nodeValue && /keycloak/i.test(node.nodeValue)) {
+            if (node.parentElement && (
+                node.parentElement.tagName === 'INPUT' ||
+                node.parentElement.tagName === 'TEXTAREA' ||
+                node.parentElement.tagName === 'SCRIPT' ||
+                node.parentElement.tagName === 'STYLE'
+            )) {
+                continue;
+            }
+            if (node.nodeValue && /keycloak|v-app/i.test(node.nodeValue)) {
                 node.nodeValue = node.nodeValue
-                    .replace(/Keycloak\s+Account\s+Management/gi, 'V-App Account Management')
-                    .replace(/Keycloak\s+Administration\s+Console/gi, 'V-App Administration Console')
-                    .replace(/Keycloak/gi, 'V-App');
+                    .replace(/Keycloak\s+Account\s+Management/gi, 'Voltforge Account Management')
+                    .replace(/Keycloak\s+Administration\s+Console/gi, 'Voltforge Administration Console')
+                    .replace(/V-App\s+Account\s+Management/gi, 'Voltforge Account Management')
+                    .replace(/V-App\s+Administration\s+Console/gi, 'Voltforge Administration Console')
+                    .replace(/Keycloak/gi, 'Voltforge')
+                    .replace(/\bV-App\b/g, 'Voltforge');
             }
         }
 
-        // Also replace in title
-        if (document.title && /keycloak/i.test(document.title)) {
-            document.title = document.title.replace(/Keycloak/gi, 'V-App');
+        if (document.title && /keycloak|v-app/i.test(document.title)) {
+            document.title = document.title
+                .replace(/Keycloak/gi, 'Voltforge')
+                .replace(/V-App/gi, 'Voltforge');
         }
     }
 
     rebrand();
 
-    // ============================================
-    // 2. Enhanced password visibility toggle
-    // ============================================
+    // =========================================================================
+    // 3. High-Performance Password Visibility Toggles
+    // =========================================================================
     function setupPasswordToggles() {
-        const passwordFields = document.querySelectorAll('input[type="password"]');
+        const passwordInputs = document.querySelectorAll('input[type="password"]');
 
-        passwordFields.forEach(function (field) {
-            const parent = field.parentElement;
+        passwordInputs.forEach(function (input) {
+            const parent = input.parentElement;
+            if (!parent) return;
 
-            // Skip if already handled
             if (parent.querySelector('.v-pwd-toggle')) return;
 
-            // Ensure parent is relatively positioned
-            parent.style.position = 'relative';
+            if (getComputedStyle(parent).position === 'static') {
+                parent.style.position = 'relative';
+            }
 
             const btn = document.createElement('button');
             btn.type = 'button';
             btn.className = 'v-pwd-toggle';
             btn.setAttribute('aria-label', 'Toggle password visibility');
-            btn.style.cssText = `
-                position: absolute;
-                right: 10px;
-                top: 50%;
-                transform: translateY(-50%);
-                background: none;
-                border: none;
-                cursor: pointer;
-                color: #94a3b8;
-                padding: 6px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                z-index: 10;
-                transition: color 0.2s ease;
-                outline: none;
-            `;
+            btn.setAttribute('tabindex', '-1');
 
-            const eyeOpen = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>';
-            const eyeClosed = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>';
+            const eyeIcon = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>';
+            const eyeSlashIcon = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>';
 
-            btn.innerHTML = eyeOpen;
+            btn.innerHTML = eyeIcon;
 
             btn.addEventListener('click', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
-                if (field.type === 'password') {
-                    field.type = 'text';
-                    btn.innerHTML = eyeClosed;
-                    btn.style.color = '#a78bfa';
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    btn.innerHTML = eyeSlashIcon;
+                    btn.classList.add('active');
                 } else {
-                    field.type = 'password';
-                    btn.innerHTML = eyeOpen;
-                    btn.style.color = '#94a3b8';
+                    input.type = 'password';
+                    btn.innerHTML = eyeIcon;
+                    btn.classList.remove('active');
                 }
-            });
-
-            btn.addEventListener('mouseenter', function () {
-                this.style.color = '#a78bfa';
-            });
-            btn.addEventListener('mouseleave', function () {
-                this.style.color = field.type === 'text' ? '#a78bfa' : '#94a3b8';
             });
 
             parent.appendChild(btn);
+            input.style.paddingRight = '42px';
+        });
 
-            // Add right padding for the icon
-            field.style.paddingRight = '44px';
+        const pfButtons = document.querySelectorAll('.pf-c-button.pf-m-control');
+        pfButtons.forEach(function (btn) {
+            btn.style.display = 'none';
         });
     }
 
-    // Hide default keycloak password toggles
-    const defaultToggles = document.querySelectorAll('.pf-c-button.pf-m-control');
-    defaultToggles.forEach(function (toggle) {
-        toggle.style.display = 'none';
-    });
-
     setupPasswordToggles();
 
-    // ============================================
-    // 3. Add floating particle background
-    // ============================================
-    function createParticles() {
-        const canvas = document.createElement('canvas');
-        canvas.id = 'v-particles';
-        canvas.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-        `;
-        document.body.insertBefore(canvas, document.body.firstChild);
-
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-        const particleCount = 40;
-
-        function resize() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        resize();
-        window.addEventListener('resize', resize);
-
-        function Particle() {
-            this.x = Math.random() * canvas.width;
-            this.y = Math.random() * canvas.height;
-            this.size = Math.random() * 2 + 0.5;
-            this.speedX = (Math.random() - 0.5) * 0.4;
-            this.speedY = (Math.random() - 0.5) * 0.4;
-            this.opacity = Math.random() * 0.4 + 0.1;
-            this.color = Math.random() > 0.5 ? '124, 58, 237' : '6, 182, 212';
-        }
-
-        Particle.prototype.update = function () {
-            this.x += this.speedX;
-            this.y += this.speedY;
-
-            if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
-            if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
-        };
-
-        Particle.prototype.draw = function () {
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(${this.color}, ${this.opacity})`;
-            ctx.fill();
-        };
-
-        for (let i = 0; i < particleCount; i++) {
-            particles.push(new Particle());
-        }
-
-        function connectParticles() {
-            for (let i = 0; i < particles.length; i++) {
-                for (let j = i + 1; j < particles.length; j++) {
-                    const dx = particles[i].x - particles[j].x;
-                    const dy = particles[i].y - particles[j].y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-
-                    if (dist < 150) {
-                        const opacity = (1 - dist / 150) * 0.12;
-                        ctx.beginPath();
-                        ctx.strokeStyle = `rgba(124, 58, 237, ${opacity})`;
-                        ctx.lineWidth = 0.5;
-                        ctx.moveTo(particles[i].x, particles[i].y);
-                        ctx.lineTo(particles[j].x, particles[j].y);
-                        ctx.stroke();
-                    }
-                }
+    // =========================================================================
+    // 4. Enterprise Back-to-Login Polish
+    // =========================================================================
+    function polishBackToLogin() {
+        const backLinks = document.querySelectorAll('#kc-form-options a');
+        backLinks.forEach(function (link) {
+            if (/back\s+to\s+login/i.test(link.textContent)) {
+                link.innerHTML = 'Already have an account? <span style="color:#06b6d4;font-weight:600;margin-left:4px;">Log in</span>';
             }
-        }
-
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(function (p) {
-                p.update();
-                p.draw();
-            });
-            connectParticles();
-            requestAnimationFrame(animate);
-        }
-
-        animate();
+        });
     }
 
-    createParticles();
+    polishBackToLogin();
 
-    // ============================================
-    // 4. Add V-App footer
-    // ============================================
+    // =========================================================================
+    // 5. Subtle Legal Terms on Registration
+    // =========================================================================
+    function addTermsNotice() {
+        const regForm = document.getElementById('kc-register-form');
+        if (!regForm || regForm.querySelector('.vf-terms-notice')) return;
+
+        const termsNotice = document.createElement('div');
+        termsNotice.className = 'vf-terms-notice';
+        termsNotice.innerHTML = 'By creating an account, you agree to Voltforge\'s <a href="#" onclick="return false;">Terms of Service</a> &amp; <a href="#" onclick="return false;">Privacy Policy</a>.';
+
+        const submitGroup = regForm.querySelector('.form-group:has(#kc-register), .form-group:has(#kc-form-buttons)');
+        if (submitGroup) {
+            regForm.insertBefore(termsNotice, submitGroup);
+        } else {
+            regForm.appendChild(termsNotice);
+        }
+    }
+
+    addTermsNotice();
+
+    // =========================================================================
+    // 6. Enterprise Footer Injection
+    // =========================================================================
     function addFooter() {
-        const existing = document.querySelector('.v-app-footer');
-        if (existing) return;
+        if (document.querySelector('.v-app-footer')) return;
 
         const footer = document.createElement('div');
         footer.className = 'v-app-footer';
-        footer.innerHTML = 'Powered by <span class="v-highlight">V-App</span> &bull; Secure Authentication Platform';
+        footer.innerHTML = '&copy; ' + new Date().getFullYear() + ' <span class="v-highlight">Voltforge Inc.</span> &bull; Enterprise Identity System';
 
         const card = document.querySelector('.card-pf');
         if (card && card.parentNode) {
@@ -222,43 +189,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
     addFooter();
 
-    // ============================================
-    // 5. Input focus animation
-    // ============================================
-    function enhanceInputs() {
-        const inputs = document.querySelectorAll('input[type="text"], input[type="password"], input[type="email"]');
-        inputs.forEach(function (input) {
-            input.addEventListener('focus', function () {
-                this.parentElement.style.transform = 'scale(1.01)';
-                this.parentElement.style.transition = 'transform 0.2s ease';
-            });
-            input.addEventListener('blur', function () {
-                this.parentElement.style.transform = 'scale(1)';
-            });
-        });
-    }
-
-    enhanceInputs();
-
-    // ============================================
-    // 6. Monitor for dynamic changes
-    // ============================================
+    // =========================================================================
+    // 7. Dynamic Mutation Observer
+    // =========================================================================
     const observer = new MutationObserver(function (mutations) {
-        let shouldRebrand = false;
-        mutations.forEach(function (mutation) {
-            if (mutation.addedNodes.length) {
-                shouldRebrand = true;
-            }
+        let hasNewNodes = false;
+        mutations.forEach(function (m) {
+            if (m.addedNodes.length) hasNewNodes = true;
         });
-        if (shouldRebrand) {
+        if (hasNewNodes) {
             setupPasswordToggles();
             rebrand();
+            polishBackToLogin();
+            addTermsNotice();
             addFooter();
         }
     });
 
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true,
-    });
+    observer.observe(document.body, { childList: true, subtree: true });
 });
