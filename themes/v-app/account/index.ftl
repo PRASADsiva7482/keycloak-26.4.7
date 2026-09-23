@@ -2,6 +2,7 @@
 <html lang="${locale}">
   <head>
     <meta charset="utf-8">
+    <base href="${resourceUrl}/">
     <link rel="icon" type="${properties.favIconType!'image/svg+xml'}" href="${resourceUrl}${properties.favIcon!'/favicon.svg'}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="color-scheme" content="light${darkMode?then(' dark', '')}">
@@ -151,17 +152,17 @@
         "referrerName": "${referrerName!""}",
         "referrerUrl": "${referrer_uri!""}",
         "features": {
-          "isRegistrationEmailAsUsername": ${realm.registrationEmailAsUsername?c},
-          "isEditUserNameAllowed": ${realm.editUsernameAllowed?c},
-          "isInternationalizationEnabled": ${realm.isInternationalizationEnabled()?c},
-          "isLinkedAccountsEnabled": ${isLinkedAccountsEnabled?c},
-          "isMyResourcesEnabled": ${(realm.userManagedAccessAllowed && isAuthorizationEnabled)?c},
-          "isViewOrganizationsEnabled": ${isViewOrganizationsEnabled?c},
-          "deleteAccountAllowed": ${deleteAccountAllowed?c},
-          "updateEmailFeatureEnabled": ${updateEmailFeatureEnabled?c},
-          "updateEmailActionEnabled": ${updateEmailActionEnabled?c},
-          "isViewGroupsEnabled": ${isViewGroupsEnabled?c},
-          "isOid4VciEnabled": ${isOid4VciEnabled?c}
+          "isRegistrationEmailAsUsername": ${(realm.registrationEmailAsUsername!false)?c},
+          "isEditUserNameAllowed": ${(realm.editUsernameAllowed!false)?c},
+          "isInternationalizationEnabled": ${(realm.isInternationalizationEnabled()!false)?c},
+          "isLinkedAccountsEnabled": ${(realm.identityFederationEnabled!false)?c},
+          "isMyResourcesEnabled": ${((realm.userManagedAccessAllowed!false) && (isAuthorizationEnabled!false))?c},
+          "isViewOrganizationsEnabled": ${(isViewOrganizationsEnabled!false)?c},
+          "deleteAccountAllowed": ${(deleteAccountAllowed!false)?c},
+          "updateEmailFeatureEnabled": ${(updateEmailFeatureEnabled!false)?c},
+          "updateEmailActionEnabled": ${(updateEmailActionEnabled!false)?c},
+          "isViewGroupsEnabled": ${(isViewGroupsEnabled!false)?c},
+          "isOid4VciEnabled": ${(isOid4VciEnabled!false)?c}
         },
         "scope": "${scope!""}"
       }
