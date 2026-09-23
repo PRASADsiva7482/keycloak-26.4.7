@@ -23,6 +23,10 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      - name: Package Custom v-app Theme
+        run: |
+          tar -czf voltforge-v-app-theme.tar.gz -C themes/v-app .
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -57,7 +61,7 @@ jobs:
           echo "TAGS_LIST=${TAGS_LIST}" >> $GITHUB_ENV
           echo "Image target: ${IMAGE}:${TAG}"
 
-      - name: Build and Push Docker Image
+      - name: Build and Push Production Docker Image
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -65,6 +69,18 @@ jobs:
           tags: ${{ env.TAGS_LIST }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: Attach Custom Theme Artifact to GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          name: "Release ${{ env.TAG }}"
+          files: voltforge-v-app-theme.tar.gz
+          generate_release_notes: true
+          body: |
+            ### VoltForge Keycloak Theme Artifacts
+            * **Container Image (GHCR):** `${{ env.IMAGE }}:${{ env.TAG }}` *(Keycloak 26.1 with baked-in v-app theme)*
+            * **Attached Theme Archive:** `voltforge-v-app-theme.tar.gz` *(Static v-app theme assets)*
 
       - name: Deploy to Azure VM via SSH
         uses: appleboy/ssh-action@v1.0.3
