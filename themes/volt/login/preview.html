@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html class="login-pf volt-theme" lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Voltforge Authentication Enclave</title>
+    <link rel="icon" type="image/svg+xml" href="resources/img/favicon.svg">
+    <link rel="stylesheet" href="resources/css/volt.css">
+    <style>
+        /* Floating preview state toggle switch */
+        .vf-state-switcher {
+            position: fixed;
+            bottom: 16px;
+            left: 20px;
+            z-index: 999;
+            background: rgba(10, 15, 26, 0.9);
+            border: 1px solid rgba(6, 182, 212, 0.4);
+            border-radius: 9999px;
+            padding: 4px;
+            display: flex;
+            gap: 4px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(12px);
+        }
+        .vf-state-btn {
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            font-size: 0.72rem;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            padding: 5px 14px;
+            border-radius: 9999px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .vf-state-btn.active {
+            background: linear-gradient(135deg, #087f83, #06b6d4);
+            color: #ffffff;
+            font-weight: 600;
+            box-shadow: 0 0 10px rgba(6, 182, 212, 0.4);
+        }
+    </style>
+    <script src="resources/js/volt-canvas.js"></script>
+    <script src="resources/js/volt.js"></script>
+</head>
+<body class="login-pf-page">
+
+    <!-- Interactive Preview Mode Switcher (For demo) -->
+    <div class="vf-state-switcher">
+        <button class="vf-state-btn active" id="btn-show-login" onclick="toggleView('login')">View Login</button>
+        <button class="vf-state-btn" id="btn-show-register" onclick="toggleView('register')">View Registration</button>
+    </div>
+
+    <div id="kc-page">
+        <div id="kc-container">
+            <header class="login-pf-page-header">
+                <div id="kc-header-wrapper">
+                    <div class="v-app-header-brand">
+                        <div class="v-app-logo-bg"></div>
+                        <span class="v-app-brand-text">Voltforge</span>
+                    </div>
+                </div>
+            </header>
+
+            <div id="kc-content">
+                <div id="kc-content-wrapper">
+
+                    <!-- ============================================== -->
+                    <!-- 1. LOGIN CONTAINER                             -->
+                    <!-- ============================================== -->
+                    <div class="card-pf" id="view-login-card">
+                        <div class="vf-capsule-switcher">
+                            <div class="vf-capsule-track">
+                                <a href="javascript:void(0)" onclick="toggleView('login')" class="vf-capsule-tab active">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                                    Sign In
+                                </a>
+                                <a href="javascript:void(0)" onclick="toggleView('register')" class="vf-capsule-tab">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+                                    Create Account
+                                </a>
+                            </div>
+                        </div>
+
+                        <header class="login-pf-header">
+                            <h1 id="kc-page-title">Sign in to your account</h1>
+                        </header>
+
+                        <div id="kc-form">
+                            <div id="kc-form-wrapper">
+                                <form id="kc-form-login" onsubmit="event.preventDefault(); alert('Voltforge Secure Authentication Triggered');">
+                                    <div class="form-group">
+                                        <label for="username" class="control-label">Username or email</label>
+                                        <input tabindex="1" id="username" class="pf-c-form-control" name="username" value="prasad" type="text" autofocus autocomplete="username">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="password" class="control-label">Password</label>
+                                        <input tabindex="2" id="password" class="pf-c-form-control" name="password" type="password" value="••••••••••••" autocomplete="current-password">
+                                    </div>
+
+                                    <div id="kc-form-options">
+                                        <a tabindex="4" href="javascript:void(0)" onclick="alert('Password reset link sent to your registered email.')">Forgot Password?</a>
+                                    </div>
+
+                                    <div id="kc-form-buttons" class="form-group">
+                                        <input tabindex="3" class="pf-c-button pf-m-primary btn-lg" name="login" id="kc-login" type="submit" value="Sign In">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ============================================== -->
+                    <!-- 2. REGISTRATION CONTAINER (2-COL COMPACT ZERO-SCROLL) -->
+                    <!-- ============================================== -->
+                    <div class="card-pf register" id="view-register-card" style="display: none;">
+                        <div class="vf-capsule-switcher">
+                            <div class="vf-capsule-track">
+                                <a href="javascript:void(0)" onclick="toggleView('login')" class="vf-capsule-tab">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                                    Sign In
+                                </a>
+                                <a href="javascript:void(0)" onclick="toggleView('register')" class="vf-capsule-tab active">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+                                    Create Account
+                                </a>
+                            </div>
+                        </div>
+
+                        <header class="login-pf-header">
+                            <h1 id="kc-page-title">Create an account</h1>
+                        </header>
+
+                        <div id="kc-register-form-wrapper">
+                            <form id="kc-register-form" onsubmit="event.preventDefault(); alert('Voltforge Account Creation Submitted');">
+                                
+                                <!-- Keycloak 26 Real Input Order (Username first, names at bottom) -->
+                                <div class="form-group">
+                                    <label for="username" class="control-label">Username <span class="required">*</span></label>
+                                    <input type="text" id="username" class="pf-c-form-control" name="username" placeholder="alex_v" autocomplete="username">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="password" class="control-label">Password <span class="required">*</span></label>
+                                    <input type="password" id="password" class="pf-c-form-control" name="password" placeholder="••••••••••••" autocomplete="new-password">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="password-confirm" class="control-label">Confirm password <span class="required">*</span></label>
+                                    <input type="password" id="password-confirm" class="pf-c-form-control" name="password-confirm" placeholder="••••••••••••" autocomplete="new-password">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="email" class="control-label">Email <span class="required">*</span></label>
+                                    <input type="email" id="email" class="pf-c-form-control" name="email" placeholder="alex@voltforge.io" autocomplete="email">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="firstName" class="control-label">First name <span class="required">*</span></label>
+                                    <input type="text" id="firstName" class="pf-c-form-control" name="firstName" placeholder="Alex" autocomplete="given-name">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="lastName" class="control-label">Last name <span class="required">*</span></label>
+                                    <input type="text" id="lastName" class="pf-c-form-control" name="lastName" placeholder="Vance" autocomplete="family-name">
+                                </div>
+
+                                <div class="form-group">
+                                    <input class="pf-c-button pf-m-primary btn-lg" type="submit" value="Register">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="vf-footer">
+                &copy; 2026 <span class="vf-highlight">Voltforge Inc.</span> &bull; Hardware Identity System
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleView(view) {
+            const loginCard = document.getElementById('view-login-card');
+            const regCard = document.getElementById('view-register-card');
+            const btnLogin = document.getElementById('btn-show-login');
+            const btnReg = document.getElementById('btn-show-register');
+
+            if (view === 'login') {
+                loginCard.style.display = 'block';
+                regCard.style.display = 'none';
+                btnLogin.classList.add('active');
+                btnReg.classList.remove('active');
+            } else {
+                loginCard.style.display = 'none';
+                regCard.style.display = 'block';
+                btnReg.classList.add('active');
+                btnLogin.classList.remove('active');
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', function() {
+            if (window.location.hash === '#register' || new URLSearchParams(window.location.search).get('view') === 'register') {
+                toggleView('register');
+            }
+        });
+    </script>
+</body>
+</html>

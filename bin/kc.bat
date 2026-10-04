@@ -132,7 +132,7 @@ if not "x%JAVA_OPTS%" == "x" (
 if not "x%JAVA_ADD_OPENS%" == "x" (
     echo "JAVA_ADD_OPENS already set in environment; overriding default settings"
 ) else (
-    set "JAVA_ADD_OPENS=--add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.util.concurrent=ALL-UNNAMED --add-opens=java.base/java.security=ALL-UNNAMED"
+    set "JAVA_ADD_OPENS=--add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.util.concurrent=ALL-UNNAMED --add-opens=java.base/java.security=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED"
 )
 set "JAVA_OPTS=%JAVA_OPTS% %JAVA_ADD_OPENS%"
 
@@ -163,6 +163,11 @@ rem Setup Keycloak specific properties
 set JAVA_OPTS=-Dprogram.name=%PROGNAME% %JAVA_OPTS%
 
 if "x%JAVA%" == "x" (
+    if "x%JAVA_HOME%" == "x" (
+        if exist "C:\Program Files\Java\jdk-21" (
+            set "JAVA_HOME=C:\Program Files\Java\jdk-21"
+        )
+    )
     if "x%JAVA_HOME%" == "x" (
         set JAVA=java
         echo JAVA_HOME is not set. Unexpected results may occur. 1>&2
