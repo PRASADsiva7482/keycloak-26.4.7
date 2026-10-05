@@ -97,9 +97,9 @@
         particles.length = 0;
 
         const isWide = width >= 1024;
-        chip.x = isWide ? width * 0.22 : width * 0.5;
+        chip.x = isWide ? Math.min(width * 0.18, 245) : width * 0.5;
         chip.y = isWide ? height * 0.5 : height * 0.25;
-        chip.size = isWide ? 150 : 110;
+        chip.size = isWide ? 140 : 100;
 
         // Ambient floating cyber particles
         const particleCount = isWide ? 40 : 20;
@@ -185,6 +185,10 @@
         const highwayLen = 80 + Math.random() * 180;
         if (dirX !== 0) {
             curX += dirX * highwayLen;
+            if (dirX === 1 && width >= 1024) {
+                const maxRightX = (width / 2) - 270;
+                if (curX > maxRightX) curX = maxRightX;
+            }
         } else {
             curY += dirY * highwayLen;
         }
@@ -393,6 +397,7 @@
     }
 
     function drawProcessorChip() {
+        if (width < 1024) return;
         ctx.save();
         chip.pulseAngle += 0.03;
         const breathGlow = (Math.sin(chip.pulseAngle) + 1) * 0.5;

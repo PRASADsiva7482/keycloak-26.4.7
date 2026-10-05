@@ -76,9 +76,10 @@ body,
     background: transparent !important;
     color: var(--vf-text-body);
     font-family: var(--vf-font) !important;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
     position: relative;
 }
 
@@ -91,9 +92,10 @@ body,
     width: 100%;
     height: 100vh !important;
     height: 100dvh !important;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
     overflow: hidden !important;
     position: relative;
     z-index: 2;
@@ -105,9 +107,9 @@ body,
     height: 100dvh !important;
     max-height: 100vh !important;
     max-height: 100dvh !important;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
     justify-content: center !important;
     padding: 1.25rem 1rem !important;
     box-sizing: border-box;
@@ -117,23 +119,23 @@ body,
 #kc-content,
 #kc-content-wrapper {
     width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 auto !important;
 }
 
 /* ==========================================================================
-   2. DESKTOP COCKPIT LAYOUT (CENTERED CARD, CHIP ON LEFT)
+   2. BALANCED CENTER-SYMMETRICAL AUTH LAYOUT (DEAD CENTER X & Y)
    ========================================================================== */
 @media (min-width: 1024px) {
     #kc-container {
-        flex-direction: row !important;
-        justify-content: flex-end !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
         align-items: center !important;
-        padding-right: 8vw !important;
-        padding-top: 0 !important;
-        padding-bottom: 0 !important;
+        padding: 1.25rem 1rem !important;
     }
 
     .login-pf-page-header {
@@ -227,6 +229,7 @@ body,
 }
 
 .register .card-pf,
+.card-pf.register,
 #kc-register-form-wrapper .card-pf,
 body[data-page-id="login-register"] .card-pf {
     max-width: 490px !important;
@@ -554,13 +557,14 @@ input:-webkit-autofill:active {
     order: 7 !important;
     display: flex;
     flex-direction: column;
-    gap: 3px;
-    margin: 0 !important;
+    gap: 4px;
+    margin: 2px 16px 0 16px !important;
+    box-sizing: border-box;
 }
 
 .vf-strength-bars {
     display: flex;
-    gap: 4px;
+    gap: 6px;
     width: 100%;
 }
 
@@ -578,6 +582,9 @@ input:-webkit-autofill:active {
 .vf-strength-pill.maximum { background: #34d399; box-shadow: 0 0 8px rgba(52, 211, 153, 0.5); }
 
 .vf-strength-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     font-size: 0.68rem;
     font-family: var(--vf-font-mono);
     color: var(--vf-text-muted);
