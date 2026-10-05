@@ -167,32 +167,50 @@
       }
     </script>
     <script>
-      // V-App Branding: Replace Keycloak references in account UI
+      // Voltforge Branding & Navigation Purge
       (function() {
-        function replaceKeycloakText() {
+        function sanitizeAccountUI() {
+          // 1. Purge Applications Menu item from navigation
+          var appElements = document.querySelectorAll('a[href*="applications"], [data-ouia-component-id="applications"], [data-testid="applications"]');
+          for (var i = 0; i < appElements.length; i++) {
+            var el = appElements[i];
+            var li = el.closest('li') || el;
+            li.style.display = 'none';
+          }
+
+          // Guard against URL navigation to applications tab
+          if (window.location.hash.indexOf('applications') !== -1) {
+            window.location.hash = '#/personal-info';
+          }
+
+          // 2. White-Label Branding (Voltforge)
           var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
           while (walker.nextNode()) {
             var node = walker.currentNode;
-            if (node.nodeValue && /keycloak/i.test(node.nodeValue)) {
+            if (node.nodeValue && (/keycloak/i.test(node.nodeValue) || /v-app/i.test(node.nodeValue))) {
               node.nodeValue = node.nodeValue
-                .replace(/Keycloak\s+Account\s+Management/gi, 'V-App Account Management')
-                .replace(/Keycloak/gi, 'V-App');
+                .replace(/Keycloak\s+Account\s+Management/gi, 'Voltforge Account Management')
+                .replace(/V-App\s+Account\s+Management/gi, 'Voltforge Account Management')
+                .replace(/Keycloak/gi, 'Voltforge')
+                .replace(/V-App/gi, 'Voltforge');
             }
           }
-          if (document.title && /keycloak/i.test(document.title)) {
-            document.title = document.title.replace(/Keycloak/gi, 'V-App');
+          if (document.title && (/keycloak/i.test(document.title) || /v-app/i.test(document.title))) {
+            document.title = document.title
+              .replace(/Keycloak/gi, 'Voltforge')
+              .replace(/V-App/gi, 'Voltforge');
           }
         }
 
         var attempts = 0;
         var interval = setInterval(function() {
-          replaceKeycloakText();
+          sanitizeAccountUI();
           attempts++;
-          if (attempts > 50) clearInterval(interval);
-        }, 500);
+          if (attempts > 60) clearInterval(interval);
+        }, 300);
 
         var observer = new MutationObserver(function() {
-          replaceKeycloakText();
+          sanitizeAccountUI();
         });
 
         if (document.body) {
@@ -200,7 +218,7 @@
         } else {
           document.addEventListener('DOMContentLoaded', function() {
             observer.observe(document.body, { childList: true, subtree: true });
-            replaceKeycloakText();
+            sanitizeAccountUI();
           });
         }
       })();

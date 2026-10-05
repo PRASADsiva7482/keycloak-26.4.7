@@ -66,29 +66,56 @@
             let registerUrl = '#';
 
             if (isLoginPage) {
-                const regLink = document.querySelector('#kc-registration a');
-                if (regLink) registerUrl = regLink.getAttribute('href');
+                const regLink = document.querySelector('#kc-registration a, #kc-registration-container a');
+                if (regLink && regLink.getAttribute('href')) {
+                    registerUrl = regLink.getAttribute('href');
+                } else if (window.location.href.includes('/authenticate')) {
+                    registerUrl = window.location.href.replace('/authenticate', '/registration');
+                }
                 loginUrl = '#';
             } else if (isRegisterPage) {
                 const backLink = document.querySelector('#kc-form-options a') || document.querySelector('#kc-back-to-login a');
-                if (backLink) loginUrl = backLink.getAttribute('href');
+                if (backLink && backLink.getAttribute('href')) {
+                    loginUrl = backLink.getAttribute('href');
+                } else if (window.location.href.includes('/registration')) {
+                    loginUrl = window.location.href.replace('/registration', '/authenticate');
+                }
                 registerUrl = '#';
             }
 
             const switcher = document.createElement('div');
             switcher.className = 'vf-capsule-switcher';
             switcher.innerHTML = `
-                <div class="vf-capsule-track">
-                    <a href="${loginUrl}" class="vf-capsule-tab ${!isRegisterPage ? 'active' : ''}">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                <div class="vf-capsule-track" role="tablist" aria-label="Authentication Options">
+                    <button type="button" role="tab" class="vf-capsule-tab ${!isRegisterPage ? 'active' : ''}" id="vf-tab-signin" aria-selected="${!isRegisterPage}">
                         Sign In
-                    </a>
-                    <a href="${registerUrl}" class="vf-capsule-tab ${isRegisterPage ? 'active' : ''}">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+                    </button>
+                    <button type="button" role="tab" class="vf-capsule-tab ${isRegisterPage ? 'active' : ''}" id="vf-tab-register" aria-selected="${isRegisterPage}">
                         Create Account
-                    </a>
+                    </button>
                 </div>
             `;
+
+            const signinBtn = switcher.querySelector('#vf-tab-signin');
+            const registerBtn = switcher.querySelector('#vf-tab-register');
+
+            if (signinBtn) {
+                signinBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    if (isRegisterPage && loginUrl && loginUrl !== '#') {
+                        window.location.href = loginUrl;
+                    }
+                });
+            }
+
+            if (registerBtn) {
+                registerBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    if (!isRegisterPage && registerUrl && registerUrl !== '#') {
+                        window.location.href = registerUrl;
+                    }
+                });
+            }
 
             // Insert switcher into header or card top
             const header = document.querySelector('.login-pf-header') || document.querySelector('.card-pf');

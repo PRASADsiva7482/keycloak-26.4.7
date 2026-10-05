@@ -2,9 +2,11 @@
    Voltforge "volt" Theme - volt.css
    Modern Cybernetic Canvas & Capsule Component Architecture
    - Strict Zero-Scroll Viewport Lock (100vh / 100dvh)
-   - Stadium / Capsule Geometry (border-radius: 9999px)
+   - Left-Docked Brand Emblem & Top-Oriented Form Card
+   - Stadium / Capsule Controls (border-radius: 9999px)
    - Segmented Capsule Switcher (Sign In ⇋ Register)
-   - Balanced Ergonomic 2-Column Grid (Zero-Overflow Guarantee)
+   - Single-Line Form Labels (No wrapped asterisks)
+   - Perfectly Centered Micro-Icons & Dynamic Highlighting
    - 100% Dark Mode Autofill Shielding
    ========================================================================== */
 
@@ -19,21 +21,21 @@
     --vf-glow-cyan: rgba(6, 182, 212, 0.35);
 
     /* Backgrounds & Glass */
-    --vf-bg-void: #05070a;
-    --vf-card-glass: rgba(10, 14, 23, 0.84);
-    --vf-card-border: rgba(6, 182, 212, 0.28);
-    --vf-card-shadow: 0 20px 60px -12px rgba(0, 0, 0, 0.85), 0 0 35px -5px rgba(6, 182, 212, 0.16);
+    --vf-bg-void: #07090e;
+    --vf-card-glass: rgba(11, 15, 24, 0.88);
+    --vf-card-border: rgba(6, 182, 212, 0.24);
+    --vf-card-shadow: 0 20px 60px -12px rgba(0, 0, 0, 0.85), 0 0 35px -5px rgba(6, 182, 212, 0.14);
 
     /* Typography */
-    --vf-font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    --vf-font-mono: 'JetBrains Mono', monospace;
+    --vf-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --vf-font-mono: 'JetBrains Mono', Consolas, monospace;
     --vf-text-title: #f8fafc;
     --vf-text-body: #e2e8f0;
     --vf-text-dim: #94a3b8;
     --vf-text-muted: #64748b;
 
     /* Capsule Controls */
-    --vf-capsule-bg: rgba(8, 12, 20, 0.85);
+    --vf-capsule-bg: rgba(9, 13, 22, 0.85);
     --vf-capsule-border: rgba(255, 255, 255, 0.12);
     --vf-capsule-focus: #06b6d4;
     --vf-radius-capsule: 9999px;
@@ -41,7 +43,7 @@
 }
 
 /* ==========================================================================
-   1. STRICT ZERO-SCROLL VIEWPORT LOCK
+   1. GLOBAL ZERO-SCROLL VIEWPORT & BACKDROP
    ========================================================================== */
 *, *::before, *::after {
     box-sizing: border-box;
@@ -58,12 +60,10 @@ html.volt-theme {
     max-height: 100dvh !important;
     overflow: hidden !important;
     background-color: var(--vf-bg-void) !important;
-    background-image: 
-        radial-gradient(at 20% 40%, rgba(6, 182, 212, 0.08) 0px, transparent 55%),
-        radial-gradient(at 80% 60%, rgba(8, 127, 131, 0.06) 0px, transparent 55%) !important;
     color: var(--vf-text-body);
     font-family: var(--vf-font) !important;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 body,
@@ -79,11 +79,9 @@ body,
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     position: relative;
 }
 
-/* Clean reset of old body pseudo-elements */
 .login-pf body::before,
 .login-pf body::after {
     display: none !important;
@@ -95,7 +93,6 @@ body,
     height: 100dvh !important;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
     overflow: hidden !important;
     position: relative;
@@ -104,12 +101,15 @@ body,
 
 #kc-container {
     width: 100%;
-    max-height: 100vh;
+    height: 100vh !important;
+    height: 100dvh !important;
+    max-height: 100vh !important;
+    max-height: 100dvh !important;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 0.75rem 1rem !important;
+    justify-content: center !important;
+    padding: 1.25rem 1rem !important;
     box-sizing: border-box;
     z-index: 10;
 }
@@ -124,41 +124,47 @@ body,
 }
 
 /* ==========================================================================
-   2. DESKTOP ASYMMETRIC CYBER COCKPIT LAYOUT
+   2. DESKTOP COCKPIT LAYOUT (CENTERED CARD, CHIP ON LEFT)
    ========================================================================== */
 @media (min-width: 1024px) {
     #kc-container {
-        /* Shift form card to right side so Left-Wing MCU Chip on Canvas is in full glory */
         flex-direction: row !important;
         justify-content: flex-end !important;
-        padding-right: 7vw !important;
+        align-items: center !important;
+        padding-right: 8vw !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
     }
+
     .login-pf-page-header {
         position: fixed !important;
         top: 22px !important;
-        left: 32px !important;
+        left: 28px !important;
         width: auto !important;
         text-align: left !important;
         z-index: 100 !important;
         margin: 0 !important;
     }
+
     .vf-footer {
         position: fixed !important;
-        bottom: 16px !important;
+        bottom: 14px !important;
         left: 50% !important;
         transform: translateX(-50%) !important;
         margin: 0 !important;
+        z-index: 100 !important;
     }
 }
 
 /* ==========================================================================
-   3. BRAND HEADER & EMBLEM
+   3. LEFT-DOCKED BRAND EMBLEM & HEADER
    ========================================================================== */
 .login-pf-page-header {
     width: 100%;
-    text-align: center;
-    margin-bottom: 0.65rem;
+    text-align: left;
+    margin-bottom: 0.85rem;
     padding: 0;
+    z-index: 50;
 }
 
 #kc-header-wrapper {
@@ -169,7 +175,7 @@ body,
 .v-app-header-brand {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 10px;
     text-decoration: none;
 }
@@ -202,14 +208,16 @@ body,
 /* ==========================================================================
    4. FROSTED GLASS CAPSULE CARD
    ========================================================================== */
-.card-pf {
+.card-pf,
+.login-pf-page .card-pf,
+#kc-container .card-pf {
     background: var(--vf-card-glass) !important;
     backdrop-filter: blur(28px) saturate(190%) !important;
     -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
     border: 1px solid var(--vf-card-border) !important;
     box-shadow: var(--vf-card-shadow) !important;
-    border-radius: 22px !important;
-    padding: 1.4rem 1.85rem 1.5rem 1.85rem !important;
+    border-radius: 20px !important;
+    padding: 1.35rem 1.85rem 1.5rem 1.85rem !important;
     width: 100% !important;
     max-width: 420px !important;
     box-sizing: border-box !important;
@@ -218,7 +226,6 @@ body,
     z-index: 20;
 }
 
-/* Optimized Widescreen width for Registration to prevent vertical height buildup */
 .register .card-pf,
 #kc-register-form-wrapper .card-pf,
 body[data-page-id="login-register"] .card-pf {
@@ -236,7 +243,7 @@ header.login-pf-header {
     font-weight: 600;
     color: var(--vf-text-title);
     letter-spacing: -0.02em;
-    line-height: 1.2;
+    line-height: 1.25;
 }
 
 .instruction, .subtitle {
@@ -254,8 +261,8 @@ header.login-pf-header {
 }
 
 .vf-capsule-track {
-    background: rgba(15, 23, 42, 0.75);
-    border: 1px solid rgba(6, 182, 212, 0.22);
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(6, 182, 212, 0.25);
     border-radius: var(--vf-radius-capsule);
     padding: 3px;
     display: inline-flex;
@@ -264,46 +271,83 @@ header.login-pf-header {
     box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4);
 }
 
-.vf-capsule-tab {
+.vf-capsule-tab,
+button.vf-capsule-tab,
+a.vf-capsule-tab {
+    background: transparent;
+    border: 1px solid transparent;
     border-radius: var(--vf-radius-capsule);
-    padding: 5px 16px;
-    font-size: 0.775rem;
+    padding: 6px 18px;
+    font-size: 0.785rem;
     font-weight: 500;
+    font-family: var(--vf-font);
     color: var(--vf-text-dim);
     text-decoration: none !important;
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 6px;
+    justify-content: center;
     transition: var(--vf-transition);
+    cursor: pointer;
+    line-height: 1;
+    user-select: none;
+    -webkit-user-select: none;
+    outline: none !important;
 }
 
-.vf-capsule-tab:hover {
+.vf-capsule-tab:hover,
+button.vf-capsule-tab:hover,
+a.vf-capsule-tab:hover {
     color: #ffffff !important;
+    text-decoration: none !important;
+    background: rgba(255, 255, 255, 0.06);
 }
 
-.vf-capsule-tab.active {
-    background: linear-gradient(135deg, rgba(6, 182, 212, 0.3), rgba(8, 127, 131, 0.5));
+.vf-capsule-tab.active,
+button.vf-capsule-tab.active,
+a.vf-capsule-tab.active {
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.35), rgba(8, 127, 131, 0.55)) !important;
     color: #ffffff !important;
     font-weight: 600;
-    border: 1px solid rgba(6, 182, 212, 0.45);
-    box-shadow: 0 0 14px rgba(6, 182, 212, 0.25);
+    border: 1px solid rgba(6, 182, 212, 0.5) !important;
+    box-shadow: 0 0 14px rgba(6, 182, 212, 0.3);
+    cursor: default !important;
+    text-decoration: none !important;
+}
+
+/* Hard suppression of link underlines across all states */
+.login-pf-page .vf-capsule-switcher a,
+.login-pf-page .vf-capsule-switcher a:hover,
+.login-pf-page .vf-capsule-switcher a:focus,
+.login-pf-page .vf-capsule-switcher a:active,
+.login-pf-page .vf-capsule-switcher button,
+.login-pf-page .vf-capsule-switcher button:hover,
+.login-pf-page .vf-capsule-switcher button:focus,
+.login-pf-page .vf-capsule-tab,
+.login-pf-page .vf-capsule-tab:hover,
+.login-pf-page .vf-capsule-tab:focus {
+    text-decoration: none !important;
+    outline: none !important;
 }
 
 /* ==========================================================================
-   6. STADIUM / CAPSULE INPUT CONTROLS & AUTOFILL GUARDIAN
+   6. STANDARDIZED CAPSULE INPUT BOX & CONTROLS
    ========================================================================== */
 .form-group {
-    margin-bottom: 0.8rem;
+    margin-bottom: 0.75rem;
     position: relative;
     width: 100%;
+    text-align: left;
 }
 
+/* Single-Line Form Labels (Guarantees asterisk stays on same line) */
 .form-group label,
 label.control-label,
 .pf-c-form__label,
 .pf-c-form__label-text {
     display: inline-flex !important;
     align-items: center !important;
+    gap: 3px !important;
+    white-space: nowrap !important;
     font-size: 0.76rem !important;
     font-weight: 500 !important;
     color: var(--vf-text-dim) !important;
@@ -319,13 +363,11 @@ label.control-label,
 .pf-c-form__label-required,
 span.required {
     color: var(--vf-cyan) !important;
-    margin-left: 2px !important;
+    display: inline-block !important;
     font-weight: 600 !important;
 }
 
-/* ==========================================================================
-   6. STANDARDIZED CAPSULE INPUT BOX & CONTROLS
-   ========================================================================== */
+/* Dedicated Input Box Wrapper */
 .vf-input-box,
 .pf-c-input-group {
     position: relative !important;
@@ -341,7 +383,7 @@ span.required {
     box-sizing: border-box !important;
 }
 
-/* True Capsule Stadium Inputs (38px Height for precision fit) */
+/* True Capsule Stadium Inputs (38px Height, 9999px Radius) */
 input[type="text"],
 input[type="password"],
 input[type="email"],
@@ -355,7 +397,7 @@ input[type="email"],
     background-color: var(--vf-capsule-bg) !important;
     border: 1px solid var(--vf-capsule-border) !important;
     border-radius: var(--vf-radius-capsule) !important;
-    padding: 0 1rem 0 2.5rem !important;
+    padding: 0 1rem 0 2.5rem !important; /* Fixed room for left micro-icon */
     color: #ffffff !important;
     font-size: 0.8125rem !important;
     font-family: var(--vf-font) !important;
@@ -368,7 +410,7 @@ input[type="email"],
 input[type="password"],
 .vf-input-box > input[type="password"],
 .pf-c-input-group > input[type="password"] {
-    padding-right: 2.5rem !important;
+    padding-right: 2.5rem !important; /* Fixed room for right eye toggle */
 }
 
 input:hover,
@@ -381,7 +423,7 @@ input:focus,
 .pf-c-form-control:focus,
 .vf-input-box > input:focus {
     border-color: var(--vf-capsule-focus) !important;
-    box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.3), 0 0 16px rgba(6, 182, 212, 0.2) !important;
+    box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.35), 0 0 16px rgba(6, 182, 212, 0.25) !important;
     background-color: #0c101a !important;
 }
 
@@ -398,7 +440,7 @@ input:-webkit-autofill:active {
     border-color: var(--vf-cyan) !important;
 }
 
-/* Left Micro-Icon Centered in Input Box */
+/* Left Micro-Icon Strictly Centered in Input Box (19px center) */
 .vf-input-icon {
     position: absolute !important;
     left: 12px !important;
@@ -423,7 +465,7 @@ input:-webkit-autofill:active {
     filter: drop-shadow(0 0 6px var(--vf-cyan)) !important;
 }
 
-/* Eye Toggle Centered in Input Box */
+/* Eye Toggle Strictly Centered in Input Box */
 .vf-pwd-toggle {
     position: absolute !important;
     right: 8px !important;
@@ -448,7 +490,6 @@ input:-webkit-autofill:active {
     background: rgba(6, 182, 212, 0.12) !important;
 }
 
-/* Clean reset of PatternFly input group */
 .pf-c-input-group .pf-c-button.pf-m-control {
     display: none !important;
 }
@@ -479,7 +520,7 @@ input:-webkit-autofill:active {
     margin-bottom: 0 !important;
 }
 
-/* Row 2: Email & Username Side-by-Side (Saves 80px vertical height!) */
+/* Row 2: Email & Username Side-by-Side */
 #kc-register-form .form-group:has(#email),
 #kc-register-form .vf-col-email {
     grid-column: 1 / 2 !important;
@@ -553,7 +594,7 @@ input:-webkit-autofill:active {
 }
 
 #kc-register-form #kc-form-options {
-    display: none !important; /* Replaced cleanly by top capsule switcher */
+    display: none !important;
 }
 
 /* ==========================================================================
@@ -619,7 +660,7 @@ button[type="submit"]:active,
 
 #kc-form-options a,
 #kc-registration a,
-.login-pf-page a {
+.login-pf-page a:not(.vf-capsule-tab) {
     color: var(--vf-cyan) !important;
     text-decoration: none !important;
     font-size: 0.775rem;
@@ -629,12 +670,11 @@ button[type="submit"]:active,
 
 #kc-form-options a:hover,
 #kc-registration a:hover,
-.login-pf-page a:hover {
+.login-pf-page a:not(.vf-capsule-tab):hover {
     color: var(--vf-cyan-bright) !important;
     text-decoration: underline !important;
 }
 
-/* Hide redundant bottom registration box on login (since top capsule switcher is active) */
 #kc-registration-container {
     display: none !important;
 }
@@ -693,7 +733,7 @@ button[type="submit"]:active,
 }
 
 /* ==========================================================================
-   10. MOBILE / TABLET ADAPTATION (PRESERVING ZERO-SCROLL)
+   10. MOBILE / TABLET ADAPTATION
    ========================================================================== */
 @media (max-width: 959px) {
     #kc-container {

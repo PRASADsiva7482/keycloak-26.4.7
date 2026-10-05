@@ -2,10 +2,10 @@
  * Voltforge Keycloak Theme - volt-canvas.js
  * High-Performance Interactive Cybernetic Canvas
  * - Real-time procedural PCB traces & bus lines
- * - Dynamic electrical pulse packets traveling across circuits
+ * - Dynamic electrical pulse packets traveling across circuits (Cyan & Gold)
+ * - Microprocessor core (VF-MCU-G1) with breathing voltage glow
  * - Cursor proximity interaction & energetic bursts
- * - Microprocessor core with breathing voltage glow
- * - 60FPS hardware-accelerated rendering with low CPU overhead
+ * - Active across all authentication pages (Login, Register, Password Reset, TOTP)
  */
 
 (function () {
@@ -44,7 +44,7 @@
         canvas.style.zIndex = '0';
         canvas.style.pointerEvents = 'none'; // Never intercept clicks
         canvas.style.opacity = '0';
-        canvas.style.transition = 'opacity 0.8s ease-out';
+        canvas.style.transition = 'opacity 0.6s ease-out';
 
         document.body.prepend(canvas);
         ctx = canvas.getContext('2d');
@@ -52,7 +52,7 @@
         handleResize();
         window.addEventListener('resize', handleResize);
 
-        // Window-level mouse tracking so canvas reacts without blocking input clicks
+        // Window-level mouse tracking
         window.addEventListener('mousemove', function (e) {
             mouse.targetX = e.clientX;
             mouse.targetY = e.clientY;
@@ -63,20 +63,17 @@
             mouse.active = false;
         });
 
-        // Trigger pulse on clicks
+        // Trigger pulse bursts on clicks
         window.addEventListener('click', function (e) {
             createBurst(e.clientX, e.clientY);
         });
 
-        // Generate procedural circuit layout
         buildCircuitGeometry();
 
-        // Fade in gracefully
         requestAnimationFrame(function () {
             canvas.style.opacity = '1';
         });
 
-        // Start render loop
         render();
     }
 
@@ -99,13 +96,12 @@
         nodes.length = 0;
         particles.length = 0;
 
-        // Position processor chip dynamically: Left-center on widescreen, top-center on narrow
         const isWide = width >= 1024;
         chip.x = isWide ? width * 0.22 : width * 0.5;
         chip.y = isWide ? height * 0.5 : height * 0.25;
         chip.size = isWide ? 150 : 110;
 
-        // Generate ambient floating cyber particles
+        // Ambient floating cyber particles
         const particleCount = isWide ? 40 : 20;
         for (let i = 0; i < particleCount; i++) {
             particles.push({
@@ -114,7 +110,7 @@
                 vx: (Math.random() - 0.5) * 0.3,
                 vy: (Math.random() - 0.5) * 0.3,
                 size: Math.random() * 1.6 + 0.6,
-                alpha: Math.random() * 0.4 + 0.1
+                alpha: Math.random() * 0.35 + 0.1
             });
         }
 
@@ -150,9 +146,9 @@
             createPcbTrace(px, startY, 0, 1, (i % 2 === 1));
         }
 
-        // Populate initial traveling electrical pulses
+        // Initial traveling electrical pulses
         traces.forEach(function (trace, idx) {
-            const pulseSpeed = 1.2 + Math.random() * 1.5;
+            const pulseSpeed = 1.2 + Math.random() * 1.6;
             pulses.push({
                 traceIndex: idx,
                 segmentIndex: 0,
@@ -169,13 +165,11 @@
         let curX = startX;
         let curY = startY;
 
-        // Lead-out segment
         const leadLen = 20 + Math.random() * 30;
         curX += dirX * leadLen;
         curY += dirY * leadLen;
         points.push({ x: curX, y: curY });
 
-        // 45-degree angle transition
         const angleDist = 35 + Math.random() * 50;
         if (dirX !== 0) {
             const ySign = bendFirst ? -1 : 1;
@@ -188,8 +182,7 @@
         }
         points.push({ x: curX, y: curY });
 
-        // Extended horizontal / vertical highway
-        const highwayLen = 80 + Math.random() * 160;
+        const highwayLen = 80 + Math.random() * 180;
         if (dirX !== 0) {
             curX += dirX * highwayLen;
         } else {
@@ -197,15 +190,12 @@
         }
         points.push({ x: curX, y: curY });
 
-        // Terminal solder pad
         nodes.push({
             x: curX,
             y: curY,
-            radius: 3.5,
-            activeAlpha: 0.3
+            radius: 3.5
         });
 
-        // Add trace record
         traces.push({
             points: points,
             color: 'rgba(6, 182, 212, 0.16)',
@@ -215,8 +205,7 @@
     }
 
     function createBurst(cx, cy) {
-        for (let i = 0; i < 12; i++) {
-            const angle = (Math.PI * 2 / 12) * i;
+        for (let i = 0; i < 10; i++) {
             pulses.push({
                 traceIndex: Math.floor(Math.random() * traces.length),
                 segmentIndex: 0,
@@ -231,35 +220,27 @@
     function render() {
         ctx.clearRect(0, 0, width, height);
 
-        // Smooth mouse lerping
+        // Deep obsidian background
+        ctx.fillStyle = '#080a0f';
+        ctx.fillRect(0, 0, width, height);
+
         mouse.x += (mouse.targetX - mouse.x) * 0.15;
         mouse.y += (mouse.targetY - mouse.y) * 0.15;
 
-        // 1. Draw subtle ambient micro-grid
         drawGrid();
-
-        // 2. Draw procedural traces
         drawTraces();
-
-        // 3. Draw moving electrical pulse packets
         drawPulses();
-
-        // 4. Draw PCB solder nodes
         drawNodes();
-
-        // 5. Draw floating cyber dust
         drawParticles();
-
-        // 6. Draw central Voltforge MCU Chip
         drawProcessorChip();
 
         animId = requestAnimationFrame(render);
     }
 
     function drawGrid() {
-        const step = 48;
+        const step = 36;
         ctx.save();
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.015)';
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.02)';
         ctx.lineWidth = 1;
         ctx.beginPath();
 
@@ -290,20 +271,18 @@
         ctx.lineJoin = 'round';
 
         traces.forEach(function (trace) {
-            // Calculate proximity to mouse
             let isNearMouse = false;
             if (mouse.active) {
                 for (let i = 0; i < trace.points.length; i++) {
                     const p = trace.points[i];
                     const distSq = (p.x - mouse.x) * (p.x - mouse.x) + (p.y - mouse.y) * (p.y - mouse.y);
-                    if (distSq < 16000) { // ~126px radius
+                    if (distSq < 16000) {
                         isNearMouse = true;
                         break;
                     }
                 }
             }
 
-            // Smooth glow ramp
             if (isNearMouse) {
                 trace.glow = Math.min(trace.glow + 0.08, 1);
             } else {
@@ -348,7 +327,6 @@
                 continue;
             }
 
-            // Interpolate position along multi-segment path
             const totalSegments = pts.length - 1;
             const segmentFloat = pulse.progress * totalSegments;
             const segIdx = Math.floor(segmentFloat);
@@ -360,7 +338,6 @@
             const curX = p1.x + (p2.x - p1.x) * segFrac;
             const curY = p1.y + (p2.y - p1.y) * segFrac;
 
-            // Draw glowing traveling capsule energy packet
             ctx.shadowColor = pulse.color;
             ctx.shadowBlur = 12;
             ctx.fillStyle = '#ffffff';
@@ -369,7 +346,6 @@
             ctx.arc(curX, curY, pulse.size, 0, Math.PI * 2);
             ctx.fill();
 
-            // Outer energy halo
             ctx.strokeStyle = pulse.color;
             ctx.lineWidth = 1.2;
             ctx.beginPath();
@@ -388,7 +364,7 @@
             ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
             ctx.fill();
 
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
             ctx.lineWidth = 1;
             ctx.beginPath();
             ctx.arc(node.x, node.y, node.radius + 2, 0, Math.PI * 2);
@@ -419,14 +395,13 @@
     function drawProcessorChip() {
         ctx.save();
         chip.pulseAngle += 0.03;
-        const breathGlow = (Math.sin(chip.pulseAngle) + 1) * 0.5; // 0 to 1
+        const breathGlow = (Math.sin(chip.pulseAngle) + 1) * 0.5;
 
         const cx = chip.x;
         const cy = chip.y;
         const s = chip.size;
         const hs = s / 2;
 
-        // Ambient radial underglow
         const radialGrad = ctx.createRadialGradient(cx, cy, s * 0.2, cx, cy, s * 1.4);
         radialGrad.addColorStop(0, `rgba(6, 182, 212, ${0.12 + breathGlow * 0.14})`);
         radialGrad.addColorStop(0.6, 'rgba(8, 127, 131, 0.05)');
@@ -437,27 +412,23 @@
         ctx.arc(cx, cy, s * 1.4, 0, Math.PI * 2);
         ctx.fill();
 
-        // Chip main body (Silicon dark matte package)
         ctx.shadowColor = '#06b6d4';
         ctx.shadowBlur = 18 * breathGlow;
         ctx.fillStyle = '#0a0d14';
         ctx.strokeStyle = `rgba(6, 182, 212, ${0.35 + breathGlow * 0.3})`;
         ctx.lineWidth = 1.5;
 
-        // Chamfered corner rectangle
         const r = 10;
         ctx.beginPath();
         ctx.roundRect(cx - hs, cy - hs, s, s, r);
         ctx.fill();
         ctx.stroke();
 
-        // Inner die ring
         ctx.shadowBlur = 0;
         ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
         ctx.lineWidth = 1;
         ctx.strokeRect(cx - hs + 12, cy - hs + 12, s - 24, s - 24);
 
-        // Core text labeling
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
 
@@ -473,7 +444,6 @@
         ctx.font = '400 7.5px "JetBrains Mono", monospace';
         ctx.fillText('256-BIT ENCLAVE', cx, cy + 18);
 
-        // Status indicator LED (Blinking Cyan)
         const ledGlow = (Math.sin(chip.pulseAngle * 1.8) + 1) * 0.5;
         ctx.shadowColor = '#22d3ee';
         ctx.shadowBlur = 8 * ledGlow;
@@ -485,11 +455,9 @@
         ctx.restore();
     }
 
-    // Auto-initialize when DOM is ready
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initCanvas);
     } else {
         initCanvas();
     }
-
 })();
