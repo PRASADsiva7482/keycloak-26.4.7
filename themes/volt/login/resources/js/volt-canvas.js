@@ -186,7 +186,7 @@
         if (dirX !== 0) {
             curX += dirX * highwayLen;
             if (dirX === 1 && width >= 1024) {
-                const maxRightX = (width / 2) - 270;
+                const maxRightX = width * 0.56;
                 if (curX > maxRightX) curX = maxRightX;
             }
         } else {

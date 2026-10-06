@@ -130,7 +130,11 @@
                 'lastName': '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>',
                 'email': '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>',
                 'password': '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>',
-                'password-confirm': '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>'
+                'password-new': '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>',
+                'password-confirm': '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>',
+                'totp': '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M9 12l2 2 4-4"></path></svg>',
+                'otp': '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M9 12l2 2 4-4"></path></svg>',
+                'userLabel': '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>'
             };
 
             const inputs = document.querySelectorAll('input[type="text"], input[type="password"], input[type="email"]');
@@ -211,66 +215,87 @@
 
         // 6. Dynamic 4-Segment Password Strength Capsule Meter
         function setupPasswordStrengthMeter() {
-            const pwdInput = document.getElementById('password');
-            const regForm = document.getElementById('kc-register-form');
-            if (!pwdInput || !regForm || document.querySelector('.vf-strength-meter')) return;
+            const targets = [
+                { formId: 'kc-register-form', inputId: 'password', altInputId: 'reg-password' },
+                { formId: 'kc-passwd-update-form', inputId: 'password-new', altInputId: 'password' }
+            ];
 
-            const meter = document.createElement('div');
-            meter.className = 'vf-strength-meter';
-            meter.innerHTML = `
-                <div class="vf-strength-bars">
-                    <span class="vf-strength-pill" data-idx="1"></span>
-                    <span class="vf-strength-pill" data-idx="2"></span>
-                    <span class="vf-strength-pill" data-idx="3"></span>
-                    <span class="vf-strength-pill" data-idx="4"></span>
-                </div>
-                <div class="vf-strength-label">Security: <span class="vf-strength-status">Awaiting Input</span></div>
-            `;
+            targets.forEach(function (target) {
+                const form = document.getElementById(target.formId);
+                if (!form || form.querySelector('.vf-strength-meter')) return;
 
-            // Insert right after the password confirmation group (spanning both columns)
-            const pwdConfirmInput = document.getElementById('password-confirm');
-            const targetGroup = pwdConfirmInput ? pwdConfirmInput.closest('.form-group') : pwdInput.closest('.form-group');
-            if (targetGroup) {
-                targetGroup.parentNode.insertBefore(meter, targetGroup.nextSibling);
-            }
+                const pwdInput = form.querySelector(`#${target.inputId}`) || form.querySelector(`#${target.altInputId}`) || form.querySelector('input[type="password"]');
+                if (!pwdInput) return;
 
-            const pills = meter.querySelectorAll('.vf-strength-pill');
-            const statusText = meter.querySelector('.vf-strength-status');
+                const meter = document.createElement('div');
+                meter.className = 'vf-strength-meter';
+                meter.innerHTML = `
+                    <div class="vf-strength-bars">
+                        <span class="vf-strength-pill" data-idx="1"></span>
+                        <span class="vf-strength-pill" data-idx="2"></span>
+                        <span class="vf-strength-pill" data-idx="3"></span>
+                        <span class="vf-strength-pill" data-idx="4"></span>
+                    </div>
+                    <div class="vf-strength-label">Security: <span class="vf-strength-status">Awaiting Input</span></div>
+                `;
 
-            pwdInput.addEventListener('input', function () {
-                const val = pwdInput.value;
-                let score = 0;
-                if (val.length >= 8) score++;
-                if (/[A-Z]/.test(val) && /[a-z]/.test(val)) score++;
-                if (/[0-9]/.test(val)) score++;
-                if (/[^A-Za-z0-9]/.test(val)) score++;
-
-                pills.forEach((pill, idx) => {
-                    pill.className = 'vf-strength-pill';
-                    if (idx < score) {
-                        if (score === 1) pill.classList.add('weak');
-                        else if (score === 2) pill.classList.add('fair');
-                        else if (score === 3) pill.classList.add('strong');
-                        else if (score === 4) pill.classList.add('maximum');
+                if (target.formId === 'kc-passwd-update-form') {
+                    // Place directly after "New Password" group
+                    const targetGroup = pwdInput.closest('.form-group');
+                    if (targetGroup) {
+                        targetGroup.parentNode.insertBefore(meter, targetGroup.nextSibling);
                     }
-                });
-
-                if (val.length === 0) {
-                    statusText.textContent = 'Awaiting Input';
-                    statusText.style.color = '#71717a';
-                } else if (score <= 1) {
-                    statusText.textContent = 'Weak';
-                    statusText.style.color = '#f87171';
-                } else if (score === 2) {
-                    statusText.textContent = 'Moderate';
-                    statusText.style.color = '#fbbf24';
-                } else if (score === 3) {
-                    statusText.textContent = 'Strong';
-                    statusText.style.color = '#22d3ee';
                 } else {
-                    statusText.textContent = 'Maximum Enclave';
-                    statusText.style.color = '#34d399';
+                    // Registration: place after "Confirm Password" group
+                    const pwdConfirmInput = form.querySelector('#password-confirm, #reg-password-confirm');
+                    const targetGroup = pwdConfirmInput ? pwdConfirmInput.closest('.form-group') : pwdInput.closest('.form-group');
+                    if (targetGroup) {
+                        targetGroup.parentNode.insertBefore(meter, targetGroup.nextSibling);
+                    }
                 }
+
+                const pills = meter.querySelectorAll('.vf-strength-pill');
+                const statusText = meter.querySelector('.vf-strength-status');
+
+                function updateMeter() {
+                    const val = pwdInput.value || '';
+                    let score = 0;
+                    if (val.length >= 8) score++;
+                    if (/[A-Z]/.test(val) && /[a-z]/.test(val)) score++;
+                    if (/[0-9]/.test(val)) score++;
+                    if (/[^A-Za-z0-9]/.test(val)) score++;
+
+                    pills.forEach((pill, idx) => {
+                        pill.className = 'vf-strength-pill';
+                        if (idx < score) {
+                            if (score === 1) pill.classList.add('weak');
+                            else if (score === 2) pill.classList.add('fair');
+                            else if (score === 3) pill.classList.add('strong');
+                            else if (score === 4) pill.classList.add('maximum');
+                        }
+                    });
+
+                    if (val.length === 0) {
+                        statusText.textContent = 'Awaiting Input';
+                        statusText.style.color = '#71717a';
+                    } else if (score <= 1) {
+                        statusText.textContent = 'Weak';
+                        statusText.style.color = '#f87171';
+                    } else if (score === 2) {
+                        statusText.textContent = 'Moderate';
+                        statusText.style.color = '#fbbf24';
+                    } else if (score === 3) {
+                        statusText.textContent = 'Strong';
+                        statusText.style.color = '#22d3ee';
+                    } else {
+                        statusText.textContent = 'Maximum Enclave';
+                        statusText.style.color = '#34d399';
+                    }
+                }
+
+                pwdInput.addEventListener('input', updateMeter);
+                pwdInput.addEventListener('keyup', updateMeter);
+                pwdInput.addEventListener('change', updateMeter);
             });
         }
 
@@ -338,7 +363,33 @@
             }
         }
 
+        // 9. Page Classification & Enclave Detection
+        function detectPageType() {
+            if (document.querySelector('.vf-totp-enclave-grid') || document.getElementById('kc-totp-settings-form')) {
+                document.body.setAttribute('data-page-id', 'login-config-totp');
+                const card = document.querySelector('.card-pf');
+                if (card) card.classList.add('vf-card-totp');
+            } else if (document.getElementById('kc-register-form')) {
+                document.body.setAttribute('data-page-id', 'login-register');
+            } else if (document.getElementById('kc-passwd-update-form')) {
+                document.body.setAttribute('data-page-id', 'login-update-password');
+                const card = document.querySelector('.card-pf');
+                if (card) card.classList.add('vf-card-update-password');
+            } else if (document.getElementById('kc-reset-password-form')) {
+                document.body.setAttribute('data-page-id', 'login-reset-password');
+                const card = document.querySelector('.card-pf');
+                if (card) card.classList.add('vf-card-reset-password');
+            } else if (document.getElementById('kc-otp-login-form')) {
+                document.body.setAttribute('data-page-id', 'login-otp');
+                const card = document.querySelector('.card-pf');
+                if (card) card.classList.add('vf-card-otp');
+            } else if (document.getElementById('kc-form-login')) {
+                document.body.setAttribute('data-page-id', 'login');
+            }
+        }
+
         // Execute all modules
+        detectPageType();
         applyRebranding();
         injectCapsuleSwitcher();
         enhanceCapsuleInputs();
@@ -353,6 +404,7 @@
             if (isProcessingMutations) return;
             isProcessingMutations = true;
             try {
+                detectPageType();
                 applyRebranding();
                 injectCapsuleSwitcher();
                 enhanceCapsuleInputs();

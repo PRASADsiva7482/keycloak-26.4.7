@@ -13,32 +13,37 @@
             bottom: 16px;
             left: 20px;
             z-index: 999;
-            background: rgba(15, 23, 42, 0.85);
-            border: 1px solid rgba(6, 182, 212, 0.3);
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(6, 182, 212, 0.35);
             border-radius: 9999px;
-            padding: 3px;
+            padding: 4px;
             display: flex;
-            gap: 3px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(12px);
+            gap: 4px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(14px);
         }
         .vf-state-btn {
             background: transparent;
             border: none;
             color: #94a3b8;
-            font-size: 0.75rem;
+            font-size: 0.73rem;
             font-family: 'Inter', sans-serif;
             font-weight: 500;
-            padding: 5px 14px;
+            padding: 5px 12px;
             border-radius: 9999px;
             cursor: pointer;
             transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .vf-state-btn:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.06);
         }
         .vf-state-btn.active {
             background: linear-gradient(135deg, #087f83, #06b6d4);
             color: #ffffff;
             font-weight: 600;
-            box-shadow: 0 0 10px rgba(6, 182, 212, 0.4);
+            box-shadow: 0 0 12px rgba(6, 182, 212, 0.45);
         }
     </style>
     <script src="resources/js/volt-canvas.js"></script>
@@ -48,8 +53,11 @@
 
     <!-- Interactive Preview Mode Switcher (For demo) -->
     <div class="vf-state-switcher">
-        <button class="vf-state-btn active" id="btn-show-login" onclick="toggleView('login')">View Login</button>
-        <button class="vf-state-btn" id="btn-show-register" onclick="toggleView('register')">View Registration</button>
+        <button class="vf-state-btn active" id="btn-show-login" onclick="toggleView('login')">1. Sign In</button>
+        <button class="vf-state-btn" id="btn-show-register" onclick="toggleView('register')">2. Register</button>
+        <button class="vf-state-btn" id="btn-show-totp" onclick="toggleView('totp')">3. 2FA (TOTP)</button>
+        <button class="vf-state-btn" id="btn-show-update-pwd" onclick="toggleView('update-pwd')">4. Update Password</button>
+        <button class="vf-state-btn" id="btn-show-reset-pwd" onclick="toggleView('reset-pwd')">5. Forgot Password</button>
     </div>
 
     <div id="kc-page">
@@ -99,7 +107,7 @@
                                     </div>
 
                                     <div id="kc-form-options">
-                                        <a tabindex="4" href="javascript:void(0)" onclick="alert('Password reset link sent to your registered email.')">Forgot Password?</a>
+                                        <a tabindex="4" href="javascript:void(0)" onclick="toggleView('reset-pwd')">Forgot Password?</a>
                                     </div>
 
                                     <div id="kc-form-buttons" class="form-group">
@@ -111,7 +119,7 @@
                     </div>
 
                     <!-- ============================================== -->
-                    <!-- 2. REGISTRATION CONTAINER (2-COL COMPACT ZERO-SCROLL) -->
+                    <!-- 2. REGISTRATION CONTAINER (2-COL ZERO-SCROLL)  -->
                     <!-- ============================================== -->
                     <div class="card-pf register" id="view-register-card" style="display: none;">
                         <div class="vf-capsule-switcher">
@@ -131,40 +139,186 @@
 
                         <div id="kc-register-form-wrapper">
                             <form id="kc-register-form" onsubmit="event.preventDefault(); alert('Voltforge Account Creation Submitted');">
-                                
-                                <!-- Keycloak 26 Real Input Order (Username first, names at bottom) -->
                                 <div class="form-group">
-                                    <label for="username" class="control-label">Username <span class="required">*</span></label>
-                                    <input type="text" id="username" class="pf-c-form-control" name="username" placeholder="alex_v" autocomplete="username">
+                                    <label for="reg-username" class="control-label">Username <span class="required">*</span></label>
+                                    <input type="text" id="reg-username" class="pf-c-form-control" name="username" placeholder="alex_v" autocomplete="username">
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="password" class="control-label">Password <span class="required">*</span></label>
-                                    <input type="password" id="password" class="pf-c-form-control" name="password" placeholder="••••••••••••" autocomplete="new-password">
+                                    <label for="reg-password" class="control-label">Password <span class="required">*</span></label>
+                                    <input type="password" id="reg-password" class="pf-c-form-control" name="password" placeholder="••••••••••••" autocomplete="new-password">
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="password-confirm" class="control-label">Confirm password <span class="required">*</span></label>
-                                    <input type="password" id="password-confirm" class="pf-c-form-control" name="password-confirm" placeholder="••••••••••••" autocomplete="new-password">
+                                    <label for="reg-password-confirm" class="control-label">Confirm password <span class="required">*</span></label>
+                                    <input type="password" id="reg-password-confirm" class="pf-c-form-control" name="password-confirm" placeholder="••••••••••••" autocomplete="new-password">
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="email" class="control-label">Email <span class="required">*</span></label>
-                                    <input type="email" id="email" class="pf-c-form-control" name="email" placeholder="alex@voltforge.io" autocomplete="email">
+                                    <label for="reg-email" class="control-label">Email <span class="required">*</span></label>
+                                    <input type="email" id="reg-email" class="pf-c-form-control" name="email" placeholder="alex@voltforge.io" autocomplete="email">
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="firstName" class="control-label">First name <span class="required">*</span></label>
-                                    <input type="text" id="firstName" class="pf-c-form-control" name="firstName" placeholder="Alex" autocomplete="given-name">
+                                    <label for="reg-firstName" class="control-label">First name <span class="required">*</span></label>
+                                    <input type="text" id="reg-firstName" class="pf-c-form-control" name="firstName" placeholder="Alex" autocomplete="given-name">
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="lastName" class="control-label">Last name <span class="required">*</span></label>
-                                    <input type="text" id="lastName" class="pf-c-form-control" name="lastName" placeholder="Vance" autocomplete="family-name">
+                                    <label for="reg-lastName" class="control-label">Last name <span class="required">*</span></label>
+                                    <input type="text" id="reg-lastName" class="pf-c-form-control" name="lastName" placeholder="Vance" autocomplete="family-name">
                                 </div>
 
                                 <div class="form-group">
                                     <input class="pf-c-button pf-m-primary btn-lg" type="submit" value="Register">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- ============================================== -->
+                    <!-- 3. 2FA TOTP CONFIGURATION ENCLAVE GRID         -->
+                    <!-- ============================================== -->
+                    <div class="card-pf vf-card-totp" id="view-totp-card" style="display: none;">
+                        <header class="login-pf-header">
+                            <h1 id="kc-page-title">Mobile Authenticator Setup</h1>
+                        </header>
+
+                        <div class="vf-totp-enclave-grid">
+                            <!-- LEFT COLUMN: QR Code & Setup Instructions -->
+                            <div class="vf-totp-col-qr">
+                                <div class="vf-totp-step-badge">1. Scan Barcode</div>
+                                <p class="vf-totp-hint">Open your authenticator app (Google Authenticator, Microsoft Authenticator) and scan the QR barcode:</p>
+                                <div class="vf-totp-qr-wrapper">
+                                    <svg id="kc-totp-secret-qr-code" viewBox="0 0 100 100" width="132" height="132" fill="#000000">
+                                        <!-- Clean SVG QR mockup -->
+                                        <rect width="100" height="100" fill="#ffffff"/>
+                                        <rect x="10" y="10" width="28" height="28" fill="#090d16"/>
+                                        <rect x="14" y="14" width="20" height="20" fill="#ffffff"/>
+                                        <rect x="18" y="18" width="12" height="12" fill="#090d16"/>
+                                        <rect x="62" y="10" width="28" height="28" fill="#090d16"/>
+                                        <rect x="66" y="14" width="20" height="20" fill="#ffffff"/>
+                                        <rect x="70" y="18" width="12" height="12" fill="#090d16"/>
+                                        <rect x="10" y="62" width="28" height="28" fill="#090d16"/>
+                                        <rect x="14" y="66" width="20" height="20" fill="#ffffff"/>
+                                        <rect x="18" y="70" width="12" height="12" fill="#090d16"/>
+                                        <rect x="44" y="12" width="8" height="8" fill="#090d16"/>
+                                        <rect x="48" y="24" width="8" height="8" fill="#090d16"/>
+                                        <rect x="12" y="44" width="8" height="8" fill="#090d16"/>
+                                        <rect x="24" y="48" width="8" height="8" fill="#090d16"/>
+                                        <rect x="44" y="44" width="12" height="12" fill="#090d16"/>
+                                        <rect x="60" y="44" width="8" height="8" fill="#090d16"/>
+                                        <rect x="72" y="52" width="8" height="8" fill="#090d16"/>
+                                        <rect x="80" y="44" width="8" height="8" fill="#090d16"/>
+                                        <rect x="44" y="64" width="8" height="16" fill="#090d16"/>
+                                        <rect x="56" y="72" width="12" height="8" fill="#090d16"/>
+                                        <rect x="72" y="64" width="16" height="8" fill="#090d16"/>
+                                        <rect x="80" y="80" width="8" height="8" fill="#090d16"/>
+                                    </svg>
+                                </div>
+                                <a href="javascript:void(0)" class="vf-totp-link" onclick="alert('Manual key: JBSWY3DPEHPK3PXP')">Unable to scan?</a>
+                            </div>
+
+                            <!-- RIGHT COLUMN: Verification Code & Submit Actions -->
+                            <div class="vf-totp-col-verify">
+                                <div class="vf-totp-step-badge">2. Verify & Register</div>
+                                <p class="vf-totp-hint">Enter the 6-digit one-time code generated by your app to register this device.</p>
+
+                                <form id="kc-totp-settings-form" onsubmit="event.preventDefault(); alert('2FA Authenticator Enclave Registered Successfully');">
+                                    <div class="form-group">
+                                        <label for="totp" class="pf-c-form__label pf-c-form__label-text">Authenticator Code *</label>
+                                        <div class="vf-input-box">
+                                            <input type="text" id="totp" name="totp" autocomplete="one-time-code" class="pf-c-form-control vf-capsule-input"
+                                                   placeholder="000 000" maxlength="8" inputmode="numeric" dir="ltr" autofocus />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="userLabel" class="pf-c-form__label pf-c-form__label-text">Device Name</label>
+                                        <div class="vf-input-box">
+                                            <input type="text" class="pf-c-form-control vf-capsule-input" id="userLabel" name="userLabel" autocomplete="off"
+                                                   placeholder="e.g. My Phone" dir="ltr" />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group vf-totp-signout-row">
+                                        <label>
+                                            <input type="checkbox" id="logout-sessions" name="logout-sessions" value="on" checked>
+                                            <span>Sign out from other devices</span>
+                                        </label>
+                                    </div>
+
+                                    <div class="vf-totp-actions">
+                                        <input type="submit" class="pf-c-button pf-m-primary vf-capsule-btn" id="saveTOTPBtn" value="Submit" />
+                                        <button type="button" class="pf-c-button pf-m-secondary vf-capsule-btn vf-btn-ghost" onclick="toggleView('login')">Cancel</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ============================================== -->
+                    <!-- 4. UPDATE PASSWORD CONTAINER                   -->
+                    <!-- ============================================== -->
+                    <div class="card-pf vf-card-update-password" id="view-update-pwd-card" style="display: none;">
+                        <header class="login-pf-header">
+                            <h1 id="kc-page-title">Update password</h1>
+                        </header>
+
+                        <div id="kc-form">
+                            <form id="kc-passwd-update-form" onsubmit="event.preventDefault(); alert('Password successfully updated!');">
+                                <div class="form-group">
+                                    <label for="password-new" class="control-label">New password *</label>
+                                    <input type="password" id="password-new" name="password-new" class="pf-c-form-control" autocomplete="new-password" placeholder="••••••••••••" autofocus>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="password-confirm" class="control-label">Confirm password *</label>
+                                    <input type="password" id="password-confirm" name="password-confirm" class="pf-c-form-control" autocomplete="new-password" placeholder="••••••••••••">
+                                </div>
+
+                                <div id="kc-form-options" class="form-group">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" id="logout-other-sessions" name="logout-sessions" value="on" checked>
+                                            Sign out from other devices
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div id="kc-form-buttons" class="form-group">
+                                    <input class="pf-c-button pf-m-primary btn-lg" type="submit" value="Submit">
+                                    <button class="pf-c-button pf-m-secondary btn-lg" type="submit" name="cancel-aia" value="true" onclick="event.preventDefault(); toggleView('login');">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- ============================================== -->
+                    <!-- 5. FORGOT PASSWORD / RESET CONTAINER           -->
+                    <!-- ============================================== -->
+                    <div class="card-pf vf-card-reset-password" id="view-reset-pwd-card" style="display: none;">
+                        <header class="login-pf-header">
+                            <h1 id="kc-page-title">Forgot Your Password?</h1>
+                        </header>
+
+                        <div class="instruction">
+                            Enter your username or email address and we will send you instructions on how to create a new password.
+                        </div>
+
+                        <div id="kc-form">
+                            <form id="kc-reset-password-form" onsubmit="event.preventDefault(); alert('Password reset email sent!');">
+                                <div class="form-group">
+                                    <label for="reset-username" class="control-label">Username or email</label>
+                                    <input type="text" id="reset-username" name="username" class="pf-c-form-control" placeholder="alex@voltforge.io" autofocus>
+                                </div>
+
+                                <div id="kc-form-options">
+                                    <a href="javascript:void(0)" onclick="toggleView('login')">&larr; Back to Login</a>
+                                </div>
+
+                                <div id="kc-form-buttons" class="form-group">
+                                    <input class="pf-c-button pf-m-primary btn-lg" type="submit" value="Submit">
                                 </div>
                             </form>
                         </div>
@@ -181,27 +335,36 @@
 
     <script>
         function toggleView(view) {
-            const loginCard = document.getElementById('view-login-card');
-            const regCard = document.getElementById('view-register-card');
-            const btnLogin = document.getElementById('btn-show-login');
-            const btnReg = document.getElementById('btn-show-register');
+            const views = {
+                'login': document.getElementById('view-login-card'),
+                'register': document.getElementById('view-register-card'),
+                'totp': document.getElementById('view-totp-card'),
+                'update-pwd': document.getElementById('view-update-pwd-card'),
+                'reset-pwd': document.getElementById('view-reset-pwd-card')
+            };
 
-            if (view === 'login') {
-                loginCard.style.display = 'block';
-                regCard.style.display = 'none';
-                btnLogin.classList.add('active');
-                btnReg.classList.remove('active');
-            } else {
-                loginCard.style.display = 'none';
-                regCard.style.display = 'block';
-                btnReg.classList.add('active');
-                btnLogin.classList.remove('active');
-            }
+            const buttons = {
+                'login': document.getElementById('btn-show-login'),
+                'register': document.getElementById('btn-show-register'),
+                'totp': document.getElementById('btn-show-totp'),
+                'update-pwd': document.getElementById('btn-show-update-pwd'),
+                'reset-pwd': document.getElementById('btn-show-reset-pwd')
+            };
+
+            Object.keys(views).forEach(k => {
+                if (views[k]) views[k].style.display = (k === view) ? 'block' : 'none';
+                if (buttons[k]) {
+                    if (k === view) buttons[k].classList.add('active');
+                    else buttons[k].classList.remove('active');
+                }
+            });
         }
 
         window.addEventListener('DOMContentLoaded', function() {
-            if (window.location.hash === '#register' || new URLSearchParams(window.location.search).get('view') === 'register') {
-                toggleView('register');
+            const urlParams = new URLSearchParams(window.location.search);
+            const viewParam = urlParams.get('view') || window.location.hash.replace('#', '');
+            if (viewParam && ['login', 'register', 'totp', 'update-pwd', 'reset-pwd'].includes(viewParam)) {
+                toggleView(viewParam);
             }
         });
     </script>
