@@ -375,10 +375,17 @@ a.vf-capsule-tab.active {
 /* ==========================================================================
    6. STANDARDIZED CAPSULE INPUT BOX & CONTROLS
    ========================================================================== */
-.form-group {
-    margin-bottom: 0.75rem;
-    position: relative;
-    width: 100%;
+.form-group,
+.form-horizontal .form-group {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    margin-top: 0 !important;
+    margin-bottom: 0.75rem !important;
+    padding: 0 !important;
+    position: relative !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
     text-align: left;
 }
 
@@ -592,31 +599,51 @@ input:-webkit-autofill:active {
 }
 
 /* Row 4: Dynamic Password Strength Capsule */
+/* Form layout normalization across all pages */
+.form-horizontal,
+.form-horizontal .form-group {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+.card-pf .col-xs-12,
+.card-pf .col-sm-12,
+.card-pf .col-md-12,
+.card-pf .col-lg-12 {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    width: 100% !important;
+}
+
 .vf-strength-meter {
     display: flex !important;
     flex-direction: column !important;
-    gap: 4px !important;
+    gap: 5px !important;
     width: 100% !important;
-    margin: 4px 0 10px 0 !important;
+    max-width: 100% !important;
+    margin: 6px 0 6px 0 !important;
     box-sizing: border-box !important;
 }
 
 #kc-register-form .vf-strength-meter {
     grid-column: 1 / -1 !important;
     order: 7 !important;
-    margin: 2px 0 0 0 !important;
+    margin: 4px 0 2px 0 !important;
 }
 
 .vf-strength-bars {
     display: flex !important;
     gap: 6px !important;
     width: 100% !important;
+    max-width: 100% !important;
     box-sizing: border-box !important;
 }
 
 .vf-strength-pill {
     height: 3px;
-    flex: 1;
+    flex: 1 1 0%;
     border-radius: var(--vf-radius-capsule);
     background: rgba(255, 255, 255, 0.08);
     transition: var(--vf-transition);
@@ -628,12 +655,15 @@ input:-webkit-autofill:active {
 .vf-strength-pill.maximum { background: #34d399; box-shadow: 0 0 8px rgba(52, 211, 153, 0.5); }
 
 .vf-strength-label {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.68rem;
-    font-family: var(--vf-font-mono);
-    color: var(--vf-text-muted);
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    font-size: 0.68rem !important;
+    font-family: var(--vf-font-mono) !important;
+    color: var(--vf-text-muted) !important;
 }
 
 /* Row 5: Action Group */
@@ -655,34 +685,37 @@ input:-webkit-autofill:active {
    ========================================================================== */
 .vf-totp-enclave-grid {
     display: grid !important;
-    grid-template-columns: 230px 1fr !important;
-    gap: 22px !important;
-    align-items: start !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 20px !important;
+    align-items: stretch !important;
     width: 100% !important;
     box-sizing: border-box !important;
 }
 
-.vf-totp-col-qr {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    text-align: center !important;
-    background: rgba(9, 13, 22, 0.45) !important;
-    border: 1px solid rgba(6, 182, 212, 0.18) !important;
-    border-radius: 16px !important;
-    padding: 0.85rem 0.75rem !important;
-    box-sizing: border-box !important;
-}
-
+.vf-totp-col-qr,
 .vf-totp-col-verify {
     display: flex !important;
     flex-direction: column !important;
-    width: 100% !important;
+    background: rgba(9, 13, 22, 0.45) !important;
+    border: 1px solid rgba(6, 182, 212, 0.18) !important;
+    border-radius: 16px !important;
+    padding: 1rem 0.95rem !important;
     box-sizing: border-box !important;
+    height: 100% !important;
+}
+
+.vf-totp-col-qr {
+    align-items: center !important;
+    text-align: center !important;
+}
+
+.vf-totp-col-verify {
+    justify-content: space-between !important;
 }
 
 .vf-totp-step-badge {
     display: inline-flex !important;
+    align-self: center !important;
     align-items: center !important;
     gap: 6px !important;
     font-family: var(--vf-font-mono) !important;
@@ -781,8 +814,28 @@ input:-webkit-autofill:active {
 }
 
 /* TOTP Form Inputs */
+#kc-totp-settings-form {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
 #kc-totp-settings-form .form-group {
-    margin-bottom: 0.6rem !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    margin-bottom: 0.65rem !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+#kc-totp-settings-form .vf-input-box {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
 }
 
 #totp, #otp {

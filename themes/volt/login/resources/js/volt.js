@@ -240,11 +240,9 @@
                 `;
 
                 if (target.formId === 'kc-passwd-update-form') {
-                    // Place directly after "New Password" group
-                    const targetGroup = pwdInput.closest('.form-group');
-                    if (targetGroup) {
-                        targetGroup.parentNode.insertBefore(meter, targetGroup.nextSibling);
-                    }
+                    // Place directly after "New Password" input box inside the form group
+                    const targetBox = pwdInput.closest('.vf-input-box') || pwdInput;
+                    targetBox.parentNode.insertBefore(meter, targetBox.nextSibling);
                 } else {
                     // Registration: place after "Confirm Password" group
                     const pwdConfirmInput = form.querySelector('#password-confirm, #reg-password-confirm');
