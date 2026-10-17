@@ -5,47 +5,39 @@
         ${msg("updatePasswordTitle")}
     <#elseif section = "form">
         <form id="kc-passwd-update-form" class="${properties.kcFormClass!}" onsubmit="login.disabled = true; return true;" action="${url.loginAction}" method="post">
-            <div class="${properties.kcFormGroupClass!}" style="margin-bottom: 10px;">
-                <div class="${properties.kcLabelWrapperClass!}">
-                    <label for="password-new" class="${properties.kcLabelClass!}">${msg("passwordNew")} *</label>
+            <div class="form-group" style="margin-bottom: 10px;">
+                <label for="password-new" class="pf-c-form__label pf-c-form__label-text">${msg("passwordNew")} *</label>
+                <div class="vf-input-box" dir="ltr">
+                    <input type="password" id="password-new" name="password-new" class="pf-c-form-control vf-capsule-input"
+                           autofocus autocomplete="new-password"
+                           placeholder="••••••••••••"
+                           aria-invalid="<#if messagesPerField.existsError('password','password-confirm')>true</#if>"
+                    />
                 </div>
-                <div class="${properties.kcInputWrapperClass!}">
-                    <div class="vf-input-box" dir="ltr">
-                        <input type="password" id="password-new" name="password-new" class="${properties.kcInputClass!} vf-capsule-input"
-                               autofocus autocomplete="new-password"
-                               placeholder="••••••••••••"
-                               aria-invalid="<#if messagesPerField.existsError('password','password-confirm')>true</#if>"
-                        />
-                    </div>
 
-                    <#if messagesPerField.existsError('password')>
-                        <span id="input-error-password" class="vf-input-error" aria-live="polite">
-                            ${kcSanitize(messagesPerField.get('password'))?no_esc}
-                        </span>
-                    </#if>
-                </div>
+                <#if messagesPerField.existsError('password')>
+                    <span id="input-error-password" class="vf-input-error" aria-live="polite">
+                        ${kcSanitize(messagesPerField.get('password'))?no_esc}
+                    </span>
+                </#if>
             </div>
 
-            <div class="${properties.kcFormGroupClass!}" style="margin-bottom: 10px;">
-                <div class="${properties.kcLabelWrapperClass!}">
-                    <label for="password-confirm" class="${properties.kcLabelClass!}">${msg("passwordConfirm")} *</label>
+            <div class="form-group" style="margin-bottom: 10px;">
+                <label for="password-confirm" class="pf-c-form__label pf-c-form__label-text">${msg("passwordConfirm")} *</label>
+                <div class="vf-input-box" dir="ltr">
+                    <input type="password" id="password-confirm" name="password-confirm"
+                           class="pf-c-form-control vf-capsule-input"
+                           autocomplete="new-password"
+                           placeholder="••••••••••••"
+                           aria-invalid="<#if messagesPerField.existsError('password-confirm')>true</#if>"
+                    />
                 </div>
-                <div class="${properties.kcInputWrapperClass!}">
-                    <div class="vf-input-box" dir="ltr">
-                        <input type="password" id="password-confirm" name="password-confirm"
-                               class="${properties.kcInputClass!} vf-capsule-input"
-                               autocomplete="new-password"
-                               placeholder="••••••••••••"
-                               aria-invalid="<#if messagesPerField.existsError('password-confirm')>true</#if>"
-                        />
-                    </div>
 
-                    <#if messagesPerField.existsError('password-confirm')>
-                        <span id="input-error-password-confirm" class="vf-input-error" aria-live="polite">
-                            ${kcSanitize(messagesPerField.get('password-confirm'))?no_esc}
-                        </span>
-                    </#if>
-                </div>
+                <#if messagesPerField.existsError('password-confirm')>
+                    <span id="input-error-password-confirm" class="vf-input-error" aria-live="polite">
+                        ${kcSanitize(messagesPerField.get('password-confirm'))?no_esc}
+                    </span>
+                </#if>
             </div>
 
             <div class="${properties.kcFormGroupClass!}">
